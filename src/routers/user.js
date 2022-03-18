@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
 const auth = require("../middleware/auth");
-const multer = require('multer')
+//const multer = require('multer')
 
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
@@ -106,62 +106,62 @@ router.post("/users/logoutAll/", auth, async (req, res) => {
 });
 
 
-const uploadImage = multer({
-  // المكان اللي كان هيحط في الصور بس احنا حاليا هنحط الصوره في ال db 
-  //dest:'avatars' , 
-  limits : {
-    fileSize : 1000000 //1mb 
-  } ,  
-  fileFilter(req , file , cb ) {
+// const uploadImage = multer({
+//   // المكان اللي كان هيحط في الصور بس احنا حاليا هنحط الصوره في ال db 
+//   //dest:'avatars' , 
+//   limits : {
+//     fileSize : 1000000 //1mb 
+//   } ,  
+//   fileFilter(req , file , cb ) {
 
-    //ends with jpg regex
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
-    {
-      return cb(new Error ('please upload image') )
-    }
-    cb(undefined , true);
-  }
-})
-
-
-// const middelewareError =  (req , res , next)=> {
-//   throw new Error ("aaaaaaaaaa") ;
-// }
-
-router.post('/users/me/avatar/' ,auth ,  uploadImage.single('avatar') , async (req, res)=> {
-  req.user.avatar =  req.file.buffer 
-  await req.user.save()
-  res.send() ;
-}, (error , req , res , next) =>{
-// لما يحصل ايرور هيعمل دي 
-  res.status(400).send({error: error.message})
-})
+//     //ends with jpg regex
+//     if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+//     {
+//       return cb(new Error ('please upload image') )
+//     }
+//     cb(undefined , true);
+//   }
+// })
 
 
-router.delete('/users/me/avatar/' ,auth  , async (req, res)=> {
-  req.user.avatar =  undefined
-  await req.user.save()
-  res.send() ;
-}, (error , req , res , next) =>{
-// لما يحصل ايرور هيعمل دي 
-  res.status(400).send({error: error.message})
-})
+// // const middelewareError =  (req , res , next)=> {
+// //   throw new Error ("aaaaaaaaaa") ;
+// // }
+
+// router.post('/users/me/avatar/' ,auth ,  uploadImage.single('avatar') , async (req, res)=> {
+//   req.user.avatar =  req.file.buffer 
+//   await req.user.save()
+//   res.send() ;
+// }, (error , req , res , next) =>{
+// // لما يحصل ايرور هيعمل دي 
+//   res.status(400).send({error: error.message})
+// })
 
 
-router.get('/users/:id/avatar' , async(req,res) => {
+// router.delete('/users/me/avatar/' ,auth  , async (req, res)=> {
+//   req.user.avatar =  undefined
+//   await req.user.save()
+//   res.send() ;
+// }, (error , req , res , next) =>{
+// // لما يحصل ايرور هيعمل دي 
+//   res.status(400).send({error: error.message})
+// })
 
-  const user = await User.findById(req.params.id) 
-  try {
-  if (!user || user.avatar === undefined)
-  {
-    throw new Error 
-  }
-  res.set('content-Type' , 'image/jpg')
-  res.send(user.avatar) 
-  }catch(e)
-  {
-    res.status(404).send() ; 
-  }
-})
+
+// router.get('/users/:id/avatar' , async(req,res) => {
+
+//   const user = await User.findById(req.params.id) 
+//   try {
+//   if (!user || user.avatar === undefined)
+//   {
+//     throw new Error 
+//   }
+//   res.set('content-Type' , 'image/jpg')
+//   res.send(user.avatar) 
+//   }catch(e)
+//   {
+//     res.status(404).send() ; 
+//   }
+// })
 
 module.exports = router;
