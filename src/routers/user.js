@@ -113,7 +113,6 @@ const uploadImage = multer({
     fileSize : 1000000 //1mb 
   } ,  
   fileFilter(req , file , cb ) {
-
     //ends with jpg regex
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
     {
